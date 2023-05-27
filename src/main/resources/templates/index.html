@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cat Facts</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>Cat Facts</h1>
+    <form id="addFactForm">
+        <button type="submit" class="btn btn-primary">Add Cat Fact</button>
+    </form>
+
+    <form id="searchForm" class="my-3">
+        <div class="form-group">
+            <input type="text" id="searchTerm" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <table id="catFactsTable" class="table">
+        <thead>
+        <tr>
+            <th>Fact</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var catFacts = [];
+
+        function renderCatFacts() {
+            var tableBody = document.getElementById("catFactsTable").getElementsByTagName("tbody")[0];
+            tableBody.innerHTML = "";
+
+            catFacts.forEach(function(catFact, index) {
+                var row = tableBody.insertRow();
+
+                var factCell = row.insertCell();
+                factCell.innerText = catFact.fact;
+
+                var actionCell = row.insertCell();
+                var deleteLink = document.createElement("a");
+                deleteLink.href = "javascript:void(0);";
+                deleteLink.innerText = "Delete";
+                deleteLink.addEventListener("click", function() {
+                    deleteCatFact(index);
+                });
+                actionCell.appendChild(deleteLink);
+            });
+        }
+
+        function addCatFact(fact) {
+            var catFact = {
+                fact: fact
+            };
+
+            catFacts.push(catFact);
+            renderCatFacts();
+        }
+
+        function deleteCatFact(index) {
+            if (index >= 0 && index < catFacts.length) {
+                catFacts.splice(index, 1);
+                renderCatFacts();
+            }
+        }
+
+        document.getElementById("addFactForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var url = "https://catfact.ninja/fact?max_length=114";
+            fetch(url)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data.fact) {
+                        addCatFact(data.fact);
+                    }
+                });
+        });
+
+        document.getElementById("searchForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var searchTerm = document.getElementById("searchTerm").value.toLowerCase();
+            var searchResults = catFacts.filter(function(catFact) {
+                return catFact.fact.toLowerCase().includes(searchTerm);
+            });
+            renderSearchResults(searchResults);
+        });
+
+        function renderSearchResults(results) {
+            var tableBody = document.getElementById("catFactsTable").getElementsByTagName("tbody")[0];
+            tableBody.innerHTML = "";
+
+            results.forEach(function(catFact) {
+                var row = tableBody.insertRow();
+
+                var factCell = row.insertCell();
+                factCell.innerText = catFact.fact;
+
+                var actionCell = row.insertCell();
+                var deleteLink = document.createElement("a");
+                deleteLink.href = "javascript:void(0);";
+                deleteLink.innerText = "Delete";
+                deleteLink.addEventListener("click", function() {
+                    deleteCatFact(catFacts.indexOf(catFact));
+                });
+                actionCell.appendChild(deleteLink);
+            });
+        }
+    });
+</script>
+</body>
+</html>
+
+
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var catFacts = [];
+
+            function renderCatFacts() {
+                var tableBody = document.getElementById("catFactsTable").getElementsByTagName("tbody")[0];
+                tableBody.innerHTML = "";
+
+                catFacts.forEach(function(catFact, index) {
+                    var row = tableBody.insertRow();
+
+                    var factCell = row.insertCell();
+                    factCell.innerText = catFact.fact;
+
+
+
+                    var actionCell = row.insertCell();
+                    var deleteLink = document.createElement("a");
+                    deleteLink.href = "javascript:void(0);";
+                    deleteLink.innerText = "Delete";
+                    deleteLink.addEventListener("click", function() {
+                        deleteCatFact(index);
+                    });
+                    actionCell.appendChild(deleteLink);
+                });
+            }
+
+            function addCatFact(fact, length) {
+                var catFact = {
+                    fact: fact
+                };
+
+                catFacts.push(catFact);
+                renderCatFacts();
+            }
+
+            function deleteCatFact(index) {
+                if (index >= 0 && index < catFacts.length) {
+                    catFacts.splice(index, 1);
+                    renderCatFacts();
+                }
+            }
+
+            document.getElementById("addFactForm").addEventListener("submit", function(event) {
+                event.preventDefault();
+                var url = "https://catfact.ninja/fact?max_length=114";
+                fetch(url)
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        if (data.fact) {
+                            addCatFact(data.fact);
+                        }
+                    });
+            });
+        });
+    </script>
+</body>
+</html>
